@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  name        String
+  nickname    String       @unique
+  email       String       @unique
+  password    String
+  roleId      Int          @map("role_id")
+  pictureId   Int?         @map("picture_id")
+  points      Int          @default(0)
+
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  role        Role         @relation(fields: [roleId], references: [id])
+  picture     Picture?     @relation(fields: [pictureId], references: [id])
+
+  eventUsers  EventUser[]
+  userRewards UserReward[]
+
+  @@map("users")
+}
+
+model Role {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  users       User[]
+
+  @@map("roles")
+}
+
+model Picture {
+  id          Int       @id @default(autoincrement())
+  fileName    String    @map("file_name")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  users       User[]
+  rewards     Reward[]
+
+  @@map("pictures")
+}
+
+model Location {
+  id          Int       @id @default(autoincrement())
+  name        String
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  devices     Device[]
+  events      Event[]
+
+  @@map("locations")
+}
+
+model Device {
+  id          Int       @id @default(autoincrement())
+  locationId  Int       @map("location_id")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  location    Location  @relation(fields: [locationId], references: [id])
+
+  @@map("devices")
+}
+
+model Event {
+  id            Int         @id @default(autoincrement())
+  locationId    Int         @map("location_id")
+
+  name          String
+
+  date          DateTime    @db.Date
+
+  openTime      DateTime    @map("open_time")
+  startTime     DateTime    @map("start_time")
+  cutoffTime    DateTime    @map("cutoff_time")
+
+  points        Int
+
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  location      Location    @relation(fields: [locationId], references: [id])
+
+  eventUsers    EventUser[]
+
+  @@map("events")
+}
+
+model EventUser {
+  userId       Int         @map("user_id")
+  eventId      Int         @map("event_id")
+
+  arrivalTime  DateTime?   @map("arrival_time")
+
+  user         User        @relation(fields: [userId], references: [id])
+  event        Event       @relation(fields: [eventId], references: [id])
+
+  @@id([userId, eventId])
+
+  @@map("event_user")
+}
+
+model RewardType {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  rewards     Reward[]
+
+  @@map("reward_types")
+}
+
+model Reward {
+  id               Int          @id @default(autoincrement())
+
+  pictureId        Int?         @map("picture_id")
+  rewardTypeId     Int          @map("reward_type_id")
+
+  name             String
+  description      String       @db.Text
+
+  cost             Int
+  stock            Int
+
+  redeemedAmount   Int          @default(0) @map("redeemed_amount")
+  maxAmount        Int          @default(1) @map("max_amount")
+
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  picture          Picture?     @relation(fields: [pictureId], references: [id])
+
+  rewardType       RewardType   @relation(fields: [rewardTypeId], references: [id])
+
+  userRewards      UserReward[]
+
+  @@map("rewards")
+}
+
+model UserReward {
+  id            Int        @id @default(autoincrement())
+  userId        Int        @map("user_id")
+  rewardId      Int        @map("reward_id")
+
+  amount        Int
+
+  redeemedAt    DateTime   @map("redeemed_at")
+
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  user          User       @relation(fields: [userId], references: [id])
+  reward        Reward     @relation(fields: [rewardId], references: [id])
+
+  @@map("user_reward")
+}
