@@ -88,6 +88,19 @@ async function main() {
         skipDuplicates: true,
     });
 
+    await prisma.picture.createMany({
+        data: [
+            ...Array.from({ length: 20 }, (_, i) => ({
+                fileName: `/user_avatars/${i + 1}.svg`,
+                type: 'USER_AVATAR',
+            })),
+            ...Array.from({ length: 20 }, (_, i) => ({
+                fileName: `/reward_avatars/${i + 1}.svg`,
+                type: 'REWARD_AVATAR',
+            })),
+        ],
+    })
+
     console.log("Seed completed");
 }
 

@@ -63,15 +63,33 @@ exports.createEmployee = async (data) => {
 };
 
 exports.updateEmployee = async (id, data) => {
+    const updateData = {};
+
+    if (data.nickname !== undefined) {
+        updateData.nickname = data.nickname;
+    }
+
+    if (data.picture_id !== undefined) {
+        updateData.picture = data.picture_id
+            ? {
+                connect: {
+                    id: Number(data.picture_id),
+                },
+            }
+            : {
+                disconnect: true,
+            };
+    }
+
     return prisma.user.update({
         where: {
             id: Number(id),
         },
-        data: {
-            name: data.name,
-            nickname: data.nickname,
-            email: data.email,
-            points: data.points,
+
+        data: updateData,
+
+        include: {
+            picture: true,
         },
     });
 };

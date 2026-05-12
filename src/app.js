@@ -14,6 +14,7 @@ app.use("/auth", require("./routes/auth.routes"));
 app.use("/employees", require("./routes/employee.routes"));
 app.use("/events", require("./routes/event.routes"));
 app.use("/locations", require("./routes/location.routes"));
+app.use("/pictures", require("./routes/picture.routes"));
 app.use("/rewards", require("./routes/reward.routes"));
 app.use("/reward_types", require("./routes/reward_type.routes"));
 app.use("/user_rewards", require("./routes/user_reward.routes"));

@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
                 nickname: user.nickname,
                 email: user.email,
                 points: user.points,
-                picture_filename: user.picture_filename,
+                picture_id: user.picture_id,
             },
             role: user.role.name,
         });
@@ -73,8 +73,7 @@ exports.me = async (req, res) => {
             email: user.email,
             role_name: user.role.name,
             points: user.points,
-            picture_filename: user.picture_filename,
-            settings: user.settings || { theme: "light" },
+            picture_id: user.pictureId
         });
 
     } catch (err) {

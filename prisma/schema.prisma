@@ -41,9 +41,15 @@ model Role {
   @@map("roles")
 }
 
+enum PictureType {
+  USER_AVATAR
+  REWARD_AVATAR
+}
+
 model Picture {
   id          Int       @id @default(autoincrement())
   fileName    String    @map("file_name")
+  type        PictureType
 
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")

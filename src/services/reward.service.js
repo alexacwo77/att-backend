@@ -17,7 +17,8 @@ exports.getRewards = async (rewardTypeId, availableOnly) => {
     return prisma.reward.findMany({
         where,
         include: {
-            rewardType: true
+            rewardType: true,
+            picture: true
         },
         orderBy: {
             cost: 'asc'
@@ -41,7 +42,8 @@ exports.createReward = async (data) => {
             rewardTypeId: Number(data.reward_type_id),
             cost: data.cost,
             stock: data.stock,
-            maxAmount: data.max_amount
+            maxAmount: data.max_amount,
+            pictureId: data.picture_id ? Number(data.picture_id) : null,
         },
     });
 };
@@ -54,10 +56,13 @@ exports.updateReward = async (id, data) => {
         data: {
             name: data.name,
             description: data.description,
-            rewardTypeId: data.reward_type_id,
-            cost: data.cost,
-            stock: data.stock,
-            max_amount: data.max_amount
+            rewardTypeId: Number(data.reward_type_id),
+            cost: Number(data.cost),
+            stock: Number(data.stock),
+            maxAmount: Number(data.max_amount),
+        },
+        include: {
+            picture: true,
         },
     });
 };

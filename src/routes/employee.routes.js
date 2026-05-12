@@ -19,7 +19,6 @@ router.post(
 router.put(
     "/:id",
     auth,
-    admin,
     controller.updateEmployee
 );
 
