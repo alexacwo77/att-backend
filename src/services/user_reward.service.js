@@ -3,9 +3,7 @@ const prisma = require("../config/db");
 exports.getRedeemedRewards = async (userId) => {
 
     const rewards = await prisma.userReward.findMany({
-        where: {
-            userId,
-        },
+        where: userId ? { userId } : {},
         include: {
             reward: {
                 include: {
@@ -27,15 +25,18 @@ exports.getRedeemedRewards = async (userId) => {
             .toISOString()
             .split("T")[0];
 
-        const key = `${item.rewardId}-${day}`;
+        const key = `${item.userId}-${item.rewardId}-${day}`;
 
         if (!grouped.has(key)) {
 
             grouped.set(key, {
-                id: key,
+                id: item.id,
+                userId: item.userId,
                 rewardId: item.rewardId,
                 amount: item.amount,
                 redeemedAt: item.redeemedAt,
+                isUsed: item.isUsed,
+                usedAt: item.usedAt,
 
                 reward: {
                     ...item.reward,
@@ -58,4 +59,16 @@ exports.getRedeemedRewards = async (userId) => {
     }
 
     return Array.from(grouped.values());
+};
+
+exports.updateUserReward = async (id, data) => {
+    return await prisma.userReward.update({
+        where: {
+            id: Number(id),
+        },
+        data: {
+            isUsed: data.isUsed ?? null,
+            usedAt: data.isUsed ? new Date() : null,
+        },
+    });
 };

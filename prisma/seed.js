@@ -80,12 +80,20 @@ async function main() {
         skipDuplicates: true,
     });
 
-    await prisma.location.createMany({
-        data: [
-            { id: 1, name: "Meeting Room" },
-            { id: 2, name: "Lounge Room" }
-        ],
-        skipDuplicates: true,
+    await prisma.location.create({
+        data: {
+            id: 1, name: "Meeting Room"
+        }
+    });
+
+    await prisma.device.create({
+        data: {
+            location: {
+                connect: {
+                    id: 1
+                }
+            }
+        }
     });
 
     await prisma.picture.createMany({

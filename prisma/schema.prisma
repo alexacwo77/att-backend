@@ -169,8 +169,9 @@ model UserReward {
 
   amount        Int
 
+  isUsed        Boolean?   @map("is_used")
+  usedAt        DateTime?  @map("used_at")
   redeemedAt    DateTime   @map("redeemed_at")
-
   createdAt     DateTime   @default(now()) @map("created_at")
   updatedAt     DateTime   @updatedAt @map("updated_at")
 
