@@ -22,6 +22,7 @@ exports.getEmployees = async (search) => {
         },
         include: {
             role: true,
+            picture: true,
         },
         orderBy: {
             id: "desc",
@@ -57,6 +58,7 @@ exports.createEmployee = async (data) => {
             nickname: data.nickname,
             email: data.email,
             password: password,
+            cardId: data.card_id,
             roleId: 1,
         },
     });
@@ -65,8 +67,14 @@ exports.createEmployee = async (data) => {
 exports.updateEmployee = async (id, data) => {
     const updateData = {};
 
-    if (data.nickname !== undefined) {
-        updateData.nickname = data.nickname;
+    ['name', 'nickname', 'email'].forEach(field => {
+        if (data[field] !== undefined) {
+            updateData[field] = data[field];
+        }
+    });
+
+    if (data.card_id !== undefined) {
+        updateData.cardId = data.card_id || null;
     }
 
     if (data.picture_id !== undefined) {

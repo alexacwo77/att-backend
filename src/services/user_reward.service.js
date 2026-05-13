@@ -25,7 +25,7 @@ exports.getRedeemedRewards = async (userId) => {
             .toISOString()
             .split("T")[0];
 
-        const key = `${item.userId}-${item.rewardId}-${day}`;
+        const key = `${item.userId}-${item.rewardId}-${day}-${item.isUsed}`;
 
         if (!grouped.has(key)) {
 

@@ -17,6 +17,8 @@ model User {
   pictureId   Int?         @map("picture_id")
   points      Int          @default(0)
 
+  cardId      String?      @unique @map("card_id")
+
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
 

@@ -17,6 +17,10 @@ exports.checkIn = async (req, res) => {
             return error(res, "Device not found", 404);
         }
 
+        if (err.message === "USER_NOT_FOUND") {
+            return error(res, "User with this RFID card not found", 404);
+        }
+
         return error(res, "Server error: " + err.message);
     }
 };

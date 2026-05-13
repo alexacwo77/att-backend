@@ -1,6 +1,6 @@
 const prisma = require("../config/db");
 
-exports.checkIn = async ({ user_id, device_id, checkin_time }) => {
+exports.checkIn = async ({ card_id, device_id, checkin_time }) => {
     const now = checkin_time ? new Date(checkin_time) : new Date();
 
     return prisma.$transaction(async (tx) => {
@@ -17,9 +17,19 @@ exports.checkIn = async ({ user_id, device_id, checkin_time }) => {
 
         const locationId = device.locationId;
 
+        const user = await tx.user.findUnique({
+            where: {
+                cardId: card_id
+            }
+        });
+
+        if (!user) {
+            throw new Error("USER_NOT_FOUND");
+        }
+
         const eventUsers = await tx.eventUser.findMany({
             where: {
-                userId: Number(user_id),
+                userId: user.id,
                 event: {
                     locationId: locationId
                 }
@@ -74,7 +84,7 @@ exports.checkIn = async ({ user_id, device_id, checkin_time }) => {
         });
 
         await tx.user.update({
-            where: { id: Number(user_id) },
+            where: { id: user.id },
             data: {
                 points: {
                     increment: pointsAwarded

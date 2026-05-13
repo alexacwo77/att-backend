@@ -3,7 +3,7 @@ const router = require("express").Router();
 const controller = require("../controllers/employee.controller");
 
 const auth = require("../middleware/auth.middleware");
-const admin = require("../middleware/admin.middleware");
+const superadmin = require("../middleware/superadmin.middleware");
 
 router.get("/", auth, controller.getEmployees);
 
@@ -12,7 +12,7 @@ router.get("/:id", auth, controller.getEmployeeById);
 router.post(
     "/",
     auth,
-    admin,
+    superadmin,
     controller.createEmployee
 );
 
@@ -25,7 +25,7 @@ router.put(
 router.delete(
     "/:id",
     auth,
-    admin,
+    superadmin,
     controller.deleteEmployee
 );
 

@@ -3,7 +3,7 @@ const router = require("express").Router();
 const controller = require("../controllers/reward.controller");
 
 const auth = require("../middleware/auth.middleware");
-const admin = require("../middleware/admin.middleware");
+const superadmin = require("../middleware/superadmin.middleware");
 
 router.get("/", auth, controller.getRewards);
 
@@ -12,21 +12,21 @@ router.get("/:id", auth, controller.getRewardById);
 router.post(
     "/",
     auth,
-    admin,
+    superadmin,
     controller.createReward
 );
 
 router.put(
     "/:id",
     auth,
-    admin,
+    superadmin,
     controller.updateReward
 );
 
 router.delete(
     "/:id",
     auth,
-    admin,
+    superadmin,
     controller.deleteReward
 );
 

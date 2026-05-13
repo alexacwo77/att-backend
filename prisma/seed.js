@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 async function main() {
 
     // For development purposes, salt 8 is ok
-    const userPassword = await bcrypt.hash(
-        "DTAP_team6",
+    const superdminPassword = await bcrypt.hash(
+        "_DTAPteam6",
         8
     );
 
@@ -16,16 +16,30 @@ async function main() {
         8
     );
 
+    const userPassword = await bcrypt.hash(
+        "DTAP_team6",
+        8
+    );
+
     await prisma.role.createMany({
         data: [
             { id: 1, name: "admin" },
             { id: 2, name: "employee" },
+            { id: 3, name: "superadmin" },
         ],
         skipDuplicates: true,
     });
 
     await prisma.user.createMany({
         data: [
+            {
+                name: "Olavi Nieminen",
+                nickname: "Very Big Boss",
+                email: "super.dtap26@gmail.com",
+                password: superdminPassword,
+                roleId: 3,
+                points: 0
+            },
             {
                 name: "Aino Korhonen",
                 nickname: "Big Boss",
