@@ -56,13 +56,18 @@ exports.updateReward = async (id, data) => {
         data: {
             name: data.name,
             description: data.description,
-            rewardTypeId: Number(data.reward_type_id),
+            rewardType: {
+                connect: {
+                    id: Number(data.rewardTypeId)
+                }
+            },
             cost: Number(data.cost),
             stock: Number(data.stock),
-            maxAmount: Number(data.max_amount),
+            maxAmount: Number(data.maxAmount),
         },
         include: {
             picture: true,
+            rewardType: true,
         },
     });
 };

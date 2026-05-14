@@ -52,6 +52,16 @@ exports.createEmployee = async (data) => {
         8
     );
 
+    const employeeRole = await prisma.role.findFirst({
+        where: {
+            name: "employee"
+        }
+    });
+
+    if (!employeeRole) {
+        throw new Error("Employee role not found");
+    }
+
     return prisma.user.create({
         data: {
             name: data.name,
@@ -59,7 +69,11 @@ exports.createEmployee = async (data) => {
             email: data.email,
             password: password,
             cardId: data.card_id,
-            roleId: 1,
+            role: {
+                connect: {
+                    id: employeeRole.id
+                }
+            }
         },
     });
 };
@@ -67,15 +81,11 @@ exports.createEmployee = async (data) => {
 exports.updateEmployee = async (id, data) => {
     const updateData = {};
 
-    ['name', 'nickname', 'email'].forEach(field => {
+    ['name', 'nickname', 'email', 'cardId'].forEach(field => {
         if (data[field] !== undefined) {
             updateData[field] = data[field];
         }
     });
-
-    if (data.card_id !== undefined) {
-        updateData.cardId = data.card_id || null;
-    }
 
     if (data.picture_id !== undefined) {
         updateData.picture = data.picture_id
