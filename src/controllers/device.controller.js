@@ -1,24 +1,41 @@
 const deviceService = require("../services/device.service");
 const { success, error } = require("../utils/response");
 
+const errorMap = {
+    DEVICE_NOT_FOUND: {
+        message: "Device not found",
+        status: 404,
+    },
+    EVENT_NOT_FOUND: {
+        message: "No valid event found for check-in",
+        status: 404,
+    },
+    USER_NOT_FOUND: {
+        message: "User with this RFID card not found",
+        status: 404,
+    },
+    ATTENDANCE_RECORDED: {
+        message: "Attendance has already been recorded",
+        status: 409,
+    },
+};
+
 exports.checkIn = async (req, res) => {
     try {
         const result = await deviceService.checkIn(req.body);
-
-        if (!result) {
-            return error(res, "No valid event found for check-in", 400);
-        }
 
         return success(res, result);
 
     } catch (err) {
 
-        if (err.message === "DEVICE_NOT_FOUND") {
-            return error(res, "Device not found", 404);
-        }
+        const mappedError = errorMap[err.message];
 
-        if (err.message === "USER_NOT_FOUND") {
-            return error(res, "User with this RFID card not found", 404);
+        if (mappedError) {
+            return error(
+                res,
+                mappedError.message,
+                mappedError.status
+            );
         }
 
         return error(res, "Server error: " + err.message);

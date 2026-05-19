@@ -3,15 +3,27 @@ const prisma = require("../config/db");
 const toSafeDate = (value) => {
     if (!value) return null;
 
-    const normalized = value.replace(' ', 'T');
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        const [y, m, d] = value.split('-').map(Number);
 
-    const date = new Date(normalized);
-
-    if (isNaN(date.getTime())) {
-        throw new Error(`Invalid date: ${value}`);
+        return new Date(Date.UTC(y, m - 1, d));
     }
 
-    return date;
+    const [datePart, timePart] = value.split('T');
+
+    const [y, m, d] = datePart.split('-').map(Number);
+    const [h, i, s] = timePart.split(':').map(Number);
+
+    return new Date(
+        Date.UTC(
+            y,
+            m - 1,
+            d,
+            h,
+            i,
+            s || 0
+        )
+    );
 };
 
 exports.getEvents = async (dateFrom, dateTo) => {
@@ -106,9 +118,9 @@ exports.updateEvent = async (id, data) => {
                     : undefined,
                 name: data.name,
                 date: toSafeDate(data.date),
-                openTime: data.open_time ? toSafeDate(data.open_time) : undefined,
-                startTime: data.start_time ? toSafeDate(data.start_time) : undefined,
-                cutoffTime: data.cutoff_time ? toSafeDate(data.cutoff_time) : undefined,
+                openTime: toSafeDate(data.open_time),
+                startTime: toSafeDate(data.start_time),
+                cutoffTime: toSafeDate(data.cutoff_time),
                 points: data.points
             },
         });

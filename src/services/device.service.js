@@ -41,6 +41,7 @@ exports.checkIn = async ({ card_id, device_id, checkin_time }) => {
 
         let matched = null;
         let pointsAwarded = 0;
+        let alreadyRecorded = false;
 
         for (const eu of eventUsers) {
             const event = eu.event;
@@ -51,7 +52,14 @@ exports.checkIn = async ({ card_id, device_id, checkin_time }) => {
 
             if (!open || !start || !cutoff) continue;
 
+            // event is not active now
             if (now < open || now > cutoff) continue;
+
+            // attendance already recorded
+            if (eu.arrivalTime) {
+                alreadyRecorded = true;
+                continue;
+            }
 
             matched = eu;
 
@@ -65,10 +73,11 @@ exports.checkIn = async ({ card_id, device_id, checkin_time }) => {
         }
 
         if (!matched) {
-            return {
-                success: false,
-                message: "No valid event found for check-in"
-            };
+            if (alreadyRecorded) {
+                throw new Error("ATTENDANCE_RECORDED");
+            }
+
+            throw new Error("EVENT_NOT_FOUND");
         }
 
         await tx.eventUser.update({
