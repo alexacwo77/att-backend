@@ -39,7 +39,7 @@ exports.createReward = async (data) => {
         data: {
             name: data.name,
             description: data.description,
-            rewardTypeId: Number(data.reward_type_id),
+            rewardTypeId: Number(data.rewardTypeId),
             cost: data.cost,
             stock: data.stock,
             maxAmount: data.max_amount,

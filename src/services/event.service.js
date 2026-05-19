@@ -76,14 +76,14 @@ exports.createEvent = async (data) => {
             data: {
                 location: {
                     connect: {
-                        id: Number(data.location_id),
+                        id: Number(data.locationId),
                     },
                 },
                 name: data.name,
                 date: toSafeDate(data.date),
-                openTime: toSafeDate(data.open_time),
-                startTime: toSafeDate(data.start_time),
-                cutoffTime: toSafeDate(data.cutoff_time),
+                openTime: toSafeDate(data.openTime),
+                startTime: toSafeDate(data.startTime),
+                cutoffTime: toSafeDate(data.cutoffTime),
                 points: data.points
             },
         });
@@ -109,10 +109,10 @@ exports.updateEvent = async (id, data) => {
         const event = await tx.event.update({
             where: { id: eventId },
             data: {
-                location: data.location_id
+                location: data.locationId
                     ? {
                         connect: {
-                            id: Number(data.location_id),
+                            id: Number(data.locationId),
                         },
                     }
                     : undefined,

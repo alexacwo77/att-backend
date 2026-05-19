@@ -5,7 +5,7 @@ exports.getRewards = async (req, res) => {
     try {
 
         const rewards = await rewardService.getRewards(
-            req.query.reward_type_id,
+            req.query.rewardTypeId,
             req.query.available_only
         );
 
