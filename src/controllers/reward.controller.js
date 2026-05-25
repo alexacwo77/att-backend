@@ -42,9 +42,7 @@ exports.createReward = async (req, res) => {
         const reward = await rewardService.createReward(req.body);
 
         return success(res, {
-            data: {
-                reward_id: reward.id
-            }
+            reward_id: reward.id
         }, 201);
 
     } catch (err) {
