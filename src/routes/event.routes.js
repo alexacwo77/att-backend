@@ -5,9 +5,9 @@ const controller = require("../controllers/event.controller");
 const auth = require("../middleware/auth.middleware");
 const admin = require("../middleware/admin.middleware");
 
-router.get("/", auth, controller.getEvents);
+router.get("/", controller.getEvents);
 
-router.get("/:id", auth, controller.getEventById);
+router.get("/:id", controller.getEventById);
 
 router.post(
     "/",
