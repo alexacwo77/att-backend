@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+process.env.TZ = 'Europe/Helsinki';
+
 const app = require("./app");
 
 const PORT = process.env.PORT || 8080;

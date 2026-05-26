@@ -6,7 +6,7 @@ const toSafeDate = (value) => {
     if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
         const [y, m, d] = value.split('-').map(Number);
 
-        return new Date(Date.UTC(y, m - 1, d));
+        return new Date(y, m - 1, d);
     }
 
     const [datePart, timePart] = value.split('T');
@@ -15,14 +15,12 @@ const toSafeDate = (value) => {
     const [h, i, s] = timePart.split(':').map(Number);
 
     return new Date(
-        Date.UTC(
             y,
             m - 1,
             d,
             h,
             i,
             s || 0
-        )
     );
 };
 
