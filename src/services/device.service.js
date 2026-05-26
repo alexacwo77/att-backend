@@ -1,7 +1,9 @@
 const prisma = require("../config/db");
 
 exports.checkIn = async ({ card_id, device_id, checkin_time }) => {
-    const now = checkin_time ? new Date(checkin_time) : new Date();
+    const now = checkin_time
+        ? new Date(checkin_time)
+        : new Date(new Date().toISOString());
 
     return prisma.$transaction(async (tx) => {
 
